@@ -16,39 +16,40 @@ lang: en
 prefer_datetime_locale:
 
 # Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
-timezone: Asia/Shanghai
+timezone: America/Lima
 
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Chirpy                          # the main title
+title: s4yhii's Blog                        # the main title
 
-tagline: A text-focused Jekyll theme   # it will display as the sub-title
+tagline: Hi!, this is my blog where I will post all my notes about my everyday learning, thanks for being here.
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, responsive, and powerful Jekyll theme for presenting professional writing.
+  Hi!, this is my blog where I will post all my notes about my everyday learning, thanks for being here.
+
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
-url: ''
+url: 'https://s4yhii.github.io'
 
 github:
-  username: github_username             # change to your github username
+  username: s4yhii             # change to your github username
 
 twitter:
-  username: twitter_username            # change to your twitter username
+  username: s4yhii            # change to your twitter username
 
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: your_full_name
-  email: example@doamin.com             # change to your email address
+  name: Jesus Lujan
+  email: jesus.lmont@gmail.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username      # change to your twitter homepage
-    - https://github.com/username       # change to your github homepage
+    - https://twitter.com/s4yhii      # change to your twitter homepage
+    - https://github.com/s4yhii       # change to your github homepage
     # Uncomment below to add more social links
-    # - https://www.facebook.com/username
-    # - https://www.linkedin.com/in/username
+    - https://www.linkedin.com/in/jesusluj4n
+    - https://app.hackthebox.eu/profile/274780
 
 google_site_verification:               # fill in to your verification string
 
@@ -56,7 +57,7 @@ google_site_verification:               # fill in to your verification string
 # The end of `jekyll-seo-tag` settings
 
 google_analytics:
-  id:                 # fill in your Google Analytics ID
+  id: 'G-V0V53P7YVQ'                 # fill in your Google Analytics ID
   # Google Analytics pageviews report settings
   pv:
     proxy_endpoint:   # fill in the Google Analytics superProxy endpoint of Google App Engine
