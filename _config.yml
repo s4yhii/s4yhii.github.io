@@ -97,7 +97,8 @@ comments:
   # utterances settings › https://utteranc.es/
   utterances:
     repo:  s4yhii/s4yhii.github.io       # <gh-username>/<repo>
-    issue_term: title  # < url | pathname | title | ...>
+    issue_term: url
+    crossorigin: "anonymous"  # < url | pathname | title | ...>
   # Giscus options › https://giscus.app
   giscus:
     repo:             # <gh-username>/<repo>
