@@ -99,9 +99,12 @@ Template("Hello ${name}!").render(name=name)
 
 ### Tornado
 
-```python
+{% raw %}
+
+```liquid
 template.Template("Hello {{ name }}!").generate(name=name)
 ```
+{% endraw %}
 
 ## Lab Solution
 Default:
@@ -163,19 +166,25 @@ html.escape('USER-CONTROLLED-DATA')
 
 Default:
 
- ```html
+{% raw %}
+
+ ```liquid
  <h2> welcome {{ logged_user }}.</h2>
  !{% if motd %}
  <p>{{motd|safe}}</p>
  {% endif %}
 ```
+{% endraw %}
 
 Solution test 2:
 
+{% raw %}
 
- ```python
+ ```liquid
  <h2> welcome {{ logged_user }}.</h2>
- !\{% if motd %}
+ !{% if motd %}
  <p>{{motd|e}}</p>
  {% endif %}
 ```
+
+{% endraw %}
