@@ -2,7 +2,7 @@
 title: HackTheBox Armageddon
 date: 2021-07-24 12:00:00 -0400
 image: 
-  src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/armageddon/banner.png 
+  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/armageddon/banner.png 
   height: 1100
   width: 500
 categories: [HTB Writeups, Linux Easy]

@@ -81,10 +81,10 @@ theme_mode:   # [light|dark]
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn: 'https://raw.githubusercontent.com/cotes2020/chirpy-images/main'
+img_cdn: ''
 
 # the avatar on sidebar, support local or CORS resources
-avatar: '/commons/avatar.jpg'
+avatar: 'https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/streans/pikachu.jpg'
 
 # boolean type, the global switch for ToC in posts.
 toc: true

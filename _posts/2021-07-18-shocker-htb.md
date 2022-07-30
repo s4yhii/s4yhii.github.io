@@ -2,7 +2,7 @@
 title: HackTheBox Shocker
 date: 2021-07-18 12:00:00 -0400
 image: 
-  src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/shocker/banner.png
+  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/shocker/banner.png
   height: 1100
   width: 500  
 categories: [HTB Writeups, Linux Easy]

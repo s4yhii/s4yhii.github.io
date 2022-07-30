@@ -2,7 +2,7 @@
 title: Business logic vulnerabilites
 date: 2022-06-30 12:00:00 -0400
 image: 
- src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Portswigger/bl0.jpg
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Portswigger/bl0.jpg
  height: 1100
  width: 500
 categories: [Web Security, Portswigger Academy]

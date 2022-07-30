@@ -2,7 +2,7 @@
 title: Vulnerabilities in Python Code
 date: 2022-07-05 12:00:00 -0400
 image: 
- src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci0.jpg
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci0.jpg
  height: 3000
  width: 550
 categories: [Web Security, Secure Coding]

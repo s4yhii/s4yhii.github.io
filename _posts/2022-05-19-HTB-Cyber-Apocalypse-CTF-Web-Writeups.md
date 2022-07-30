@@ -2,7 +2,7 @@
 title: HTB Cyber Apocalypse Web Writeup
 date: 2022-05-18 12:00:00 -0400
 image: 
- src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/ctf/ctf0.jpg
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/ctf/ctf0.jpg
  height: 3000
  width: 450
 categories: [HTB Writeups, Cyber Apocalypse CTF]

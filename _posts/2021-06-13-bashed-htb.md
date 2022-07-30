@@ -2,7 +2,7 @@
 title: HackTheBox Bashed
 date: 2021-06-13 12:00:00 -0400
 image: 
-  src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/bashed/banner.png 
+  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/bashed/banner.png 
   height: 1100
   width: 500
 categories: [HTB Writeups, Linux Easy]

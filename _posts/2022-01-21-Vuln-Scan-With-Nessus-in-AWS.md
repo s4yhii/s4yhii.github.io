@@ -2,7 +2,7 @@
 title: Vulnerability Management with Nessus in AWS
 date: 2022-01-20 12:00:00 -0400
 image: 
-  src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/Vulnerability%20Management%20with%20Nessus%20in%20AWS%2090286706ffaf46128c3727fb6f6c7e58/banner.jpg
+  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/Vulnerability%20Management%20with%20Nessus%20in%20AWS%2090286706ffaf46128c3727fb6f6c7e58/banner.jpg
   height: 1100
   width: 500
 categories: [AWS, Blogging]

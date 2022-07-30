@@ -2,7 +2,7 @@
 title: Cloud Resume Challenge
 date: 2022-01-10 12:00:00 -0400
 image: 
-  src: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/AWS-Blogging/banner.jpeg
+  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/AWS-Blogging/banner.jpeg
   height: 1100
   width: 500
 categories: [AWS, Blogging]
