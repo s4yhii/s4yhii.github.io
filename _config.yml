@@ -84,13 +84,13 @@ theme_mode:   # [light|dark]
 img_cdn: ''
 
 # the avatar on sidebar, support local or CORS resources
-avatar: 'https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/streans/pikachu.jpg'
+avatar: 'https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/streams/pikachu.jpg'
 
 # boolean type, the global switch for ToC in posts.
 toc: true
 
 comments:
-  active:         # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
+  active: disqs        # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   disqus:
     shortname:    # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
