@@ -188,3 +188,12 @@ Solution test 2:
 ```
 
 {% endraw %}
+
+
+<script src="https://utteranc.es/client.js"
+        repo="s4yhii/s4yhii.github.io"
+        issue-term="title"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+</script>
