@@ -89,21 +89,19 @@ $ curl -g 'http://localhost:5000/page?name={{''.__class__.mro()[1].__subclasses_
 
 ## Prevention
 
-### Jinja2
 
 {% raw %}
 ```liquid
+#Jinja2
 import Jinja2
 Jinja2.from_string("Hello {{name}}!").render(name=name)
-```
-{% endraw %}
 
-### Mako
 
-```python
+#Mako
 from mako.template import Template
 Template("Hello ${name}!").render(name=name)
 ```
+{% endraw %}
 
 ### Tornado
 
@@ -239,8 +237,10 @@ So this query return any entry in the `users` table thas has an empty username, 
 
 ## Prevention
 
+- Scrutinize all the SQL queries that use user-provided input from the HTTP request, such as from sources like request.args.get, request.args.args, and request.args.forms
 - User parameterized queries, specifying placeholders for parameters
 - Escape inputs before adding them to the query, query concatenation should be avoided
+
 
 Some python libraries provides the function to use parameterized queries on all type of databases.
 
