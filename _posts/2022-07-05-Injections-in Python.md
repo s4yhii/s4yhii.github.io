@@ -39,14 +39,15 @@ subprocess.Popen('nslookup ' + hostname, ... , shell=True) # WRONG
 subprocess.Popen([ 'nslookup', hostname ], ... , shell=False) # RIGHT 
 ```
 
-## Lab Solution
-Default: 
+## Code Snippet
+### Vulnerable example
+
 ```python
 cmd= 'ping -c 3 %s' %(address)
 p=Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
 ```
 
-Solution:
+### Safe example
 
 ```python
 cmd= ['ping', '-c', '3', address]
@@ -106,8 +107,8 @@ template.Template("Hello {{ name }}!").generate(name=name)
 ```
 {% endraw %}
 
-## Lab Solution
-Default:
+## Code Snippet
+### Vulnerable example
 
 ```python 
 def page_not_found(e):
@@ -115,7 +116,7 @@ def page_not_found(e):
 	'404 page not found error: the %s resource does not exist.', % request.path), 404
 ```
 
-Solution:
+### Safe example
 
 ```python 
 def page_not_found(e):
@@ -162,9 +163,9 @@ html.escape('USER-CONTROLLED-DATA')
 <li><a href=" \{{ url }}">{{ text }}</a></li>
 ```
 
-## Lab Solution
+## Code Snippet
 
-Default:
+### Vulnerable example:
 
 {% raw %}
 
@@ -176,7 +177,7 @@ Default:
 ```
 {% endraw %}
 
-Solution test 2:
+### Safe example:
 
 {% raw %}
 
@@ -188,3 +189,181 @@ Solution test 2:
 ```
 
 {% endraw %}
+
+# SQL Injection
+
+## Vulnerable Example
+
+This Flask applicatin checks the user creentials against the SQL database.
+
+```python
+@app.route("/login")
+def login():
+
+  username = request.values.get('username')
+  password = request.values.get('password')
+
+  # Prepare database connection
+  db = pymysql.connect("localhost")
+  cursor = db.cursor()
+
+  # Execute the vulnerable SQL query concatenating user-provided input.
+  cursor.execute("SELECT * FROM users WHERE username = '%s' AND password = '%s'" % (username, password))
+
+  # If the query returns any matching record, consider the current user logged in.
+  record = cursor.fetchone()
+  if record:
+    session['logged_user'] = username
+
+  # disconnect from server
+  db.close()
+```
+
+This query is concatenation `username` and `password` user inputs, so an attacker could manipulate this to bypass the login mechanism.
+
+Injecting `' OR '1'='1';--` in the username, the query becomes:
+
+```sql
+SELECT * FROM users WHERE username = '' OR 'a'='a';-- AND password = '';
+```
+
+So this query return any entry in the `users` table thas has an empty username, so the attacker can log in as the first user in the table.
+
+## Prevention
+
+- User parameterized queries, specifying placeholders for parameters
+- Escape inputs before adding them to the query, query concatenation should be avoided
+
+Some python libraries provides the function to use parameterized queries on all type of databases.
+
+### PyMySQL, MySQL-python, MySQL connector, PyGreSQL, Psycopg, pymssql
+
+```sql
+cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+```
+
+### SQLAlchemy
+
+```sql
+stmt = sqlalchemy.sql.text("SELECT * FROM users WHERE username = :username and password = :password")
+conn.execute(stmt, {"username": username, "password": password })
+```
+### sqlite3, pyodbc
+
+```sql
+cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+```
+
+## Snippet Code
+### Vulnerable example
+
+```python
+def login_auth():
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    if not username or not password:
+        return jsonify({'status': 'fail'})
+
+    password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+
+    conn = sqlite3.connect('db.sqlite')
+    c = conn.cursor()
+
+    sql_statement = "SELECT username FROM users WHERE username='%s' and password_hash='%s'" % (username, password_hash)
+    c.execute(sql_statement)
+
+    logged_user_entry = c.fetchone()
+```
+### Safe example
+```python
+def login_auth():
+    username = request.form.get("username")
+    password = request.form.get("password")
+
+    if not username or not password:
+        return jsonify({'status': 'fail'})
+
+    password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+
+    conn = sqlite3.connect('db.sqlite')
+    c = conn.cursor()
+
+    sql_statement = "SELECT username FROM users WHERE username='%s' and password_hash='%s'", (username, password_hash, )
+    c.execute(sql_statement)
+    logged_user_entry = c.fetchone()
+```
+
+
+# XML Entity Expansion (XXE)
+
+## Vulnerable Example
+
+This flask snippet pases XML and returns the parsed content in html
+
+```python
+@tools.route("/is_xml", methods=['POST'])
+def tools_is_xml():
+    try:
+        # read data from POST
+        xml_raw = request.files['xml'].read()
+
+        # create the XML parser
+        parser = etree.XMLParser()
+
+        # parse the XML data
+        root = etree.fromstring(xml_raw, parser)
+
+        # return a string representation
+        xml = etree.tostring(root, pretty_print=True, encoding='unicode')
+        return jsonify({'status': 'yes', 'data': xml})
+    except Exception as e:
+        return jsonify({'status': 'no', 'message': str(e)})
+```
+
+When the `etree.fromstring` method is called, it parses and expands with the external entity.
+
+```xml
+<!DOCTYPE d [<!ENTITY e SYSTEM "file:///etc/passwd">]><t>&e;</t>
+```
+
+In this example the entity `&e;` is expanded with the content of `/etc/passwd` file.
+
+## Prevention
+
+The safest way to prevent XXE is always to disable DTDs (External Entities) completely. 
+
+Depending on the parser, the method should be similar to the following:
+
+```python
+parser = etree.XMLParser(resolve_entities=False, no_network=True) 
+```
+
+Disabling DTDs (Document Type Definitions) also makes the parser secure against denial of services (DOS) attacks such as Billion Laughs.  
+
+If external entities are necessary then:
+- Use XML processor features, if available, to authorize only required protocols (eg: https).
+- Use an entity resolver (and optionally an XML Catalog) to resolve only trusted entities.
+
+## Snippet Code
+### Safe example
+
+```python
+@tools.route("/is_xml", methods=['POST'])
+def tools_is_xml():
+    try:
+        # read data from POST
+        xml_raw = request.files['xml'].read()
+
+        # create the XML parser
+        parser = etree.XMLParser(resolve_entities=False, no_network=True)
+
+        # parse the XML data
+        root = etree.fromstring(xml_raw, parser)
+
+        # return a string representation
+        xml = etree.tostring(root, pretty_print=True, encoding='unicode')
+        return jsonify({'status': 'yes', 'data': xml})
+    except Exception as e:
+        return jsonify({'status': 'no', 'message': str(e)})
+```
