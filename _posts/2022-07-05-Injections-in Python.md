@@ -96,10 +96,12 @@ $ curl -g 'http://localhost:5000/page?name={{''.__class__.mro()[1].__subclasses_
 import Jinja2
 Jinja2.from_string("Hello {{name}}!").render(name=name)
 
-
 #Mako
 from mako.template import Template
 Template("Hello ${name}!").render(name=name)
+
+#Tornado
+template.Template("Hello {{ name }}!").generate(name=name)
 ```
 {% endraw %}
 
@@ -146,7 +148,7 @@ This chart details a list of critical output encoding methods required to mitiga
 
 #### Content Security Policy (CSP)
 
-The Content Security Policy (CSP) is a browser mechanism that enables the creation of source allow lists for client-side resources of web applications, e.g., JavaScript, CSS, images, etc. CSP via a special HTTP header instructs the browser to only execute or render resources from those sources.
+Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross-Site Scripting (XSS) and data injection attacks. CSP via a special HTTP header instructs the browser to only execute or render resources from those sources.
 
 For example:
 
@@ -157,13 +159,11 @@ Content-Security-Policy: default-src: 'self'; script-src: 'self' static.domain.t
 The above CSP will instruct the web browser to load all resources only from the page's origin and JavaScript source code files from `static.domain.tld`. For more details on Content Security Policy, including what it does and how to use it, see [this](https://content-security-policy.com/) article.
 notice how the `motd` variable is inserted into the HTML page using the `safe` Jinja filter, which disables HTML escaping of the content and introduces a reflected XSS vulnerability.
 
-```python
-#In vanilla Python, this can be escaped by thius html method
-html.escape('USER-CONTROLLED-DATA')
-```
-
 {% raw %}
 ```liquid
+#In vanilla Python, this can be escaped by this html method
+html.escape('USER-CONTROLLED-DATA')
+
 # In jinja everything is escaped by default except for values with |safe tag
 <li><a href=" \{{ url }}">{{ text }}</a></li>
 ```
@@ -225,7 +225,7 @@ def login():
   db.close()
 ```
 
-This query is concatenation `username` and `password` user inputs, so an attacker could manipulate this to bypass the login mechanism.
+This concatenates `username` and `password`, so an attacker could manipulate this to bypass the login mechanism.
 
 Injecting `' OR '1'='1';--` in the username, the query becomes:
 
@@ -284,24 +284,12 @@ def login_auth():
     logged_user_entry = c.fetchone()
 ```
 ### Safe example
+
+Change `sql_statement` line to:
+
 ```python
-def login_auth():
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    if not username or not password:
-        return jsonify({'status': 'fail'})
-
-    password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-
-    conn = sqlite3.connect('db.sqlite')
-    c = conn.cursor()
-
     sql_statement = "SELECT username FROM users WHERE username='%s' and password_hash='%s'", (username, password_hash, )
-    c.execute(sql_statement)
-    logged_user_entry = c.fetchone()
 ```
-
 
 # XML Entity Expansion (XXE)
 
