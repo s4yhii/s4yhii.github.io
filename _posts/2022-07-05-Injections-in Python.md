@@ -25,16 +25,15 @@ def page():
     return subprocess.check_output(cmd, shell=True)
 ```
 
-We can see the `hostname` appended to the command and executed on a subshell with the paratmeter `shell=true`, an attacker could stack another command with `;` in the GET parameter to inject other commands for example `cat /etc/paswd`
+We can see the `hostname` appended to the command and executed on a subshell with the paratmeter `shell=true`, an attacker could stack another command with `;` in the GET parameter to inject other commands for example `cat /etc/paswd` .
 
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci2.jpg)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci1.jpg)
 
 ## Prevention 
 The recommended approach to execute commands is using the `subprocess` API, with the option shell set to `False`.
 
 ```python
 subprocess.Popen('nslookup ' + hostname, ... , shell=True) # WRONG
-
 
 subprocess.Popen([ 'nslookup', hostname ], ... , shell=False) # RIGHT 
 ```
@@ -69,18 +68,22 @@ def page():
     return output
 ```
 
-The user input data is concatenated to the template text, allowing an attacker to inject template code, for example `\{\{5\*5\}\}` will be rendered as 25.
+The user input data is concatenated to the template text, allowing an attacker to inject template code, for example {% raw %}`{{5*5}}`{% endraw %} will be rendered as 25.
 
-```bash
+{% raw %}
+```liquid
 $ curl -g 'http://localhost:5000/page?name={{7*7}}'
 Hello 49!
 ```
+{% endraw %}
 
 Depending on the template engine, advanced payloads can be used to escape the template sandbox and gain `RCE` in the system, for example this snippet run a system command that add a malicious script in the tmp folder.
 
-```bash
+{% raw %}
+```liquid
 $ curl -g 'http://localhost:5000/page?name={{''.__class__.mro()[1].__subclasses__()[46]("touch /tmp/malicious.sh",shell=True)}}'
 ```
+{% endraw %}
 
 ## Prevention
 
@@ -136,7 +139,7 @@ def page_not_found(e):
 
 This chart details a list of critical output encoding methods required to mitigate Cross-Site Scripting
 
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci1.jpg)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci2.jpg)
 
 
 #### Content Security Policy (CSP)
@@ -157,11 +160,12 @@ notice how the `motd` variable is inserted into the HTML page using the `safe
 html.escape('USER-CONTROLLED-DATA')
 ```
 
-
-```python 
+{% raw %}
+```liquid
 # In jinja everything is escaped by default except for values with |safe tag
 <li><a href=" \{{ url }}">{{ text }}</a></li>
 ```
+{% endraw %}
 
 ## Code Snippet
 
