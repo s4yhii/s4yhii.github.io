@@ -71,6 +71,7 @@ def page():
 The user input data is concatenated to the template text, allowing an attacker to inject template code, for example {% raw %}`{{5*5}}`{% endraw %} will be rendered as 25.
 
 {% raw %}
+
 ```liquid
 $ curl -g 'http://localhost:5000/page?name={{7*7}}'
 Hello 49!
@@ -80,6 +81,7 @@ Hello 49!
 Depending on the template engine, advanced payloads can be used to escape the template sandbox and gain `RCE` in the system, for example this snippet run a system command that add a malicious script in the tmp folder.
 
 {% raw %}
+
 ```liquid
 $ curl -g 'http://localhost:5000/page?name={{''.__class__.mro()[1].__subclasses__()[46]("touch /tmp/malicious.sh",shell=True)}}'
 ```
@@ -89,10 +91,12 @@ $ curl -g 'http://localhost:5000/page?name={{''.__class__.mro()[1].__subclasses_
 
 ### Jinja2
 
-```python
+{% raw %}
+```liquid
 import Jinja2
 Jinja2.from_string("Hello {{name}}!").render(name=name)
 ```
+{% endraw %}
 
 ### Mako
 
