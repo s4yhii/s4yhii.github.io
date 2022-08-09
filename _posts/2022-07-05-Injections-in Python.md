@@ -2,7 +2,7 @@
 title: Vulnerabilities in Python Code
 date: 2022-07-05 12:00:00 -0400
 image: 
- path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci0.jpg
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci0_1.png
  height: 3000
  width: 550
 categories: [Web Security, Secure Coding]
@@ -27,24 +27,8 @@ def page():
 
 We can see the `hostname` appended to the command and executed on a subshell with the paratmeter `shell=true`, an attacker could stack another command with `;` in the GET parameter to inject other commands for example `cat /etc/paswd` .
 
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci1.jpg)
-
 ## Prevention 
 The recommended approach to execute commands is using the `subprocess` API, with the option shell set to `False`.
-
-```python
-subprocess.Popen('nslookup ' + hostname, ... , shell=True) # WRONG
-
-subprocess.Popen([ 'nslookup', hostname ], ... , shell=False) # RIGHT 
-```
-
-## Code Snippet
-### Vulnerable example
-
-```python
-cmd= 'ping -c 3 %s' %(address)
-p=Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-```
 
 ### Safe example
 
@@ -89,39 +73,13 @@ $ curl -g 'http://localhost:5000/page?name={{''.__class__.mro()[1].__subclasses_
 
 ## Prevention
 
-
 {% raw %}
 ```liquid
 #Jinja2
 import Jinja2
 Jinja2.from_string("Hello {{name}}!").render(name=name)
-
-#Mako
-from mako.template import Template
-Template("Hello ${name}!").render(name=name)
-
-#Tornado
-template.Template("Hello {{ name }}!").generate(name=name)
 ```
 {% endraw %}
-
-### Tornado
-
-{% raw %}
-
-```liquid
-template.Template("Hello {{ name }}!").generate(name=name)
-```
-{% endraw %}
-
-## Code Snippet
-### Vulnerable example
-
-```python 
-def page_not_found(e):
-	return render_template_string(
-	'404 page not found error: the %s resource does not exist.', % request.path), 404
-```
 
 ### Safe example
 
@@ -141,9 +99,6 @@ def page_not_found(e):
 -   Allow list: If a list of all the possible values can't be created, accept only known good data and reject all unexpected input.
 -   Deny list: If an allow-list approach is not feasible (on free form text areas, for example), reject all known bad values.
 
-This chart details a list of critical output encoding methods required to mitigate Cross-Site Scripting
-
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/codeflag/ci2.jpg)
 
 
 #### Content Security Policy (CSP)
@@ -169,31 +124,16 @@ html.escape('USER-CONTROLLED-DATA')
 ```
 {% endraw %}
 
-## Code Snippet
-
-### Vulnerable example:
-
-{% raw %}
-
- ```liquid
- <h2> welcome {{ logged_user }}.</h2>
- !{% if motd %}
- <p>{{motd|safe}}</p>
- {% endif %}
-```
-{% endraw %}
 
 ### Safe example:
 
 {% raw %}
-
  ```liquid
- <h2> welcome {{ logged_user }}.</h2>
+ <h2> welcome {{ username }}.</h2>
  !{% if motd %}
  <p>{{motd|e}}</p>
  {% endif %}
 ```
-
 {% endraw %}
 
 # SQL Injection
@@ -244,48 +184,14 @@ So this query return any entry in the `users` table thas has an empty username, 
 
 Some python libraries provides the function to use parameterized queries on all type of databases.
 
-### PyMySQL, MySQL-python, MySQL connector, PyGreSQL, Psycopg, pymssql
+### PyMySQL, MySQL-python
 
 ```sql
 cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
 ```
 
-### SQLAlchemy
-
-```sql
-stmt = sqlalchemy.sql.text("SELECT * FROM users WHERE username = :username and password = :password")
-conn.execute(stmt, {"username": username, "password": password })
-```
-### sqlite3, pyodbc
-
-```sql
-cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
-```
-
-## Snippet Code
-### Vulnerable example
-
-```python
-def login_auth():
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    if not username or not password:
-        return jsonify({'status': 'fail'})
-
-    password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-
-    conn = sqlite3.connect('db.sqlite')
-    c = conn.cursor()
-
-    sql_statement = "SELECT username FROM users WHERE username='%s' and password_hash='%s'" % (username, password_hash)
-    c.execute(sql_statement)
-
-    logged_user_entry = c.fetchone()
-```
 ### Safe example
 
-Change `sql_statement` line to:
 
 ```python
     sql_statement = "SELECT username FROM users WHERE username='%s' and password_hash='%s'", (username, password_hash, )
@@ -341,25 +247,11 @@ If external entities are necessary then:
 - Use XML processor features, if available, to authorize only required protocols (eg: https).
 - Use an entity resolver (and optionally an XML Catalog) to resolve only trusted entities.
 
-## Snippet Code
 ### Safe example
 
 ```python
-@tools.route("/is_xml", methods=['POST'])
-def tools_is_xml():
-    try:
-        # read data from POST
-        xml_raw = request.files['xml'].read()
-
-        # create the XML parser
-        parser = etree.XMLParser(resolve_entities=False, no_network=True)
-
-        # parse the XML data
-        root = etree.fromstring(xml_raw, parser)
-
-        # return a string representation
-        xml = etree.tostring(root, pretty_print=True, encoding='unicode')
-        return jsonify({'status': 'yes', 'data': xml})
-    except Exception as e:
-        return jsonify({'status': 'no', 'message': str(e)})
+    # create the XML parser
+    parser = etree.XMLParser(resolve_entities=False, no_network=True)
+    # parse the XML data
+    root = etree.fromstring(xml_raw, parser)
 ```
