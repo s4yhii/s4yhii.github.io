@@ -35,6 +35,16 @@ The recommended approach to execute commands is using the `subprocess` API, with
 ```python
 cmd= ['ping', '-c', '3', address]
 p=Popen(cmd, shell=False, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+
+```
+@app.route("/dns")
+def page():
+
+    hostname = request.values.get(hostname)
+    cmd = 'nslookup ' + hostname
+
+    return subprocess.check_output(cmd, shell=True)
+```
 ```
 # Server Site Template Injection (STTI)
 
