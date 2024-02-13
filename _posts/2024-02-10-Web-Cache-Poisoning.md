@@ -18,7 +18,7 @@ Cache keys: The unique identifier that the server wont cache (refresh based on t
 
 ## How To find Web Cache poisoning
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/PastedImage+20231222183735.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231222183735.png]]
 
 1. Identify unkeyed input: http header or cookie
 2. Look up if I can done anything interested (use param miner)
