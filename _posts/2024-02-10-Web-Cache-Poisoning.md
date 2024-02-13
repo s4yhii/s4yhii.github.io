@@ -7,18 +7,18 @@ tags: [web security, labs, owasp]
 
 # Web cache Poisoning
 Web cache poisoning is not web cache deception, is not response splitting or request smuggling
-web cache deception tricking caches into storing sensitive information so the attackers can access to it
+web cache deception tricking caches into storing sensitive information so the attackers can access to it.
 web cache poisoning is serve payloads to users via cache responses
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231126235320.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231126235320.png]]
 
 Cache keys: The unique identifier that the server wont cache (refresh based on that: only host + path)
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231126235920.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231126235920.png]]
 
 "Everything that is not part of the cache key is part of the cache poisoning attack surface"
 
 ## How To find Web Cache poisoning
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231222183735.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/PastedImage+20231222183735.png]]
 
 1. Identify unkeyed input: http header or cookie
 2. Look up if I can done anything interested (use param miner)
@@ -28,19 +28,19 @@ Cache keys: The unique identifier that the server wont cache (refresh based on t
 ## Case studies:
 
 ### Trusting headers
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231222184202.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231222184202.png]]
 Based on this no cache header, you may think that is safe, but not
 Use X-Forwarded-Header to inject an unkeyed input
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231222184301.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231222184301.png]]
 The parameter ?safe=1 us used to cache to this specific path and not to the main page
 
 ### Seizing the Cache
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231222184422.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231222184422.png]]
 In this Age specifies the exact second that this response will expire to the cache, so in the exact second the cache expires we need to spam the request in order to cache our request.
 
 ### Selective Poisoning
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231222184614.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231222184614.png]]
 This Vary: User-Agent Header is telling to the cache to add the user agent to the cache key, so this request will poisoning the cache for other people using the same browser.
 
 ## Web cache configuration
@@ -72,7 +72,7 @@ http {
 - `proxy_cache_key` defines the cache key
 - `add_header` adds the `X-Cache-Status` header to responses to indicate whether the response was cached
 Example of non-cached and cached requests:
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231223172148.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231223172148.png]]
 
 ## Identify Unkeyed Params
 
@@ -80,14 +80,14 @@ Use this headers to determine if the content served is a cached response or not,
 Cache-Control: no-cache
 Pragma: no-cache (deprecated)
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231223173520.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231223173520.png]]
 When we send a different value in language parameter, we can see that the response differs and we get a ceche miss, therebefore the language parameter has to be keyed.
 
 Both the language parameter and content are **KEYED**
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231223183053.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231223183053.png]]
 
 The ref parameter is unkeyed, now we need to find how this parameter influence in the response content (maybe reflected)
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231223183205.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231223183205.png]]
 
 Payload XSS in Unkeyed Parameter
 
@@ -155,7 +155,7 @@ Content-Length: 142
 ref="><script>var xhr = new XMLHttpRequest();xhr.open('GET', '/admin.php?reveal_flag=1', true);xhr.withCredentials = true;xhr.send();</script>
 ```
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231223212926.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231223212926.png]]
 
 ### Parameter Cloaking
 
@@ -182,28 +182,28 @@ Host: cloak.wcp.htb
 ### Exercise Web Cache 1 (GET FAT)
 
 Parameter content and language are keyed 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231224022217.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231224022217.png]]
 This is a get fat exercise, so i need to send language parameter in the GET request body.
 Since in the hint says the admin will accesses the URL /index.php?language=de, I need to only key this argument like this.
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231224022431.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231224022431.png]]
 
 !Flag delivered:  HTB{6f4c51837d8148cb8dc66beb14003706} 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231224022446.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231224022446.png]]
 
 ### Exercise Web Cache 2(Parameter Cloaking )
 
 This is the original request, the hint says the admin will visit /?language=de, so we need to poison this parameter appending a=b;language=payload.
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231224024231.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231224024231.png]]
 
 ```bash
 Payload:?language=de&a=b;language=%22%3E%3Cscript%3Evar%20xhr%20=%20new%20XMLHttpRequest()%3bxhr.open(%27GET%27,%20%27/admin?reveal_flag=1%27,%20true)%3bxhr.withCredentials%20=%20true%3bxhr.send()%3b%3C/script%3E
 ```
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231224024455.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231224024455.png]]
 We see the payload reflected in the response (stored xss), so the server cached the response and a request to /?language=de will serve the payload to admin.
 
 Flag delivered!: HTB{cac766b823bbd388727162d634fa7503}
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20231224024145.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020231224024145.png]]
 
 # Host Header Attacks
 
@@ -231,9 +231,9 @@ x-http-method-override: POST (overrides the method, check purge or head)
 content-type: s4yhii (test for invalid header make unavailable a web or repo)
 x-forwarded-scheme: http (make a content unavailable, combine with x-forwarded-host)
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240122173845.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240122173845.png]]
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240122174017.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240122174017.png]]
 
 
 ### Auth bypass via host header
@@ -254,10 +254,10 @@ ffuf -u http://IP:PORT/admin.php -w ips.txt -H 'Host: FUZZ' -fs 752
 
 #### Exercise
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240121122456.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240121122456.png]]
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240121123223.png]]
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240121123236.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240121123223.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240121123236.png]]
 
 ### Password Reset Poisoning
 
@@ -267,8 +267,8 @@ The webapp uses the manipulated host header to construct the password reset link
 #### Exercise
 
 Sending http request with an override host header like X-Forwarded-Host pointing to our controlled server and the email of the victim (admin account)
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240121125017.png]]
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240121125116.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240121125017.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240121125116.png]]
 Use this url to change the admin password.
 
 ### Web cache poisoning
@@ -279,10 +279,10 @@ First we enter a cache buster to test this attack, to send to the admin we will 
 
 **The admin accesses the URL http://admin.hostheaders.htb/login.php
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240121144553.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240121144553.png]]
 Final POC Request to steal admin creds
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240121144812.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240121144812.png]]
 
 ### Exercice Bypass flawed validation
 
@@ -296,7 +296,7 @@ Bypassing blacklist filters for `localhost`:
 - IPv6: ::1
 - External domain that resolves to localhost: localtest.me
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240122033143.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240122033143.png]]
 
 
 # Session Puzzling
@@ -341,7 +341,7 @@ ffuf -u http://127.0.0.1/profile.php -b 'sessionID=FUZZ' -w wordlist.txt -fc 302
 
 To analyze the entropy of session IDs, we can use `Burp Sequencer`. To do so, we right-click the login request in Burp and click on `Send to Sequencer`. Afterward, switch to the Sequencer Tab. Make sure that Burp automatically detected the session cookie in the `Token Location Within Response` field and that the `Cookie` option is selected. We could also specify a custom location if we wanted to analyze the entropy of a different field in the response. Afterward, start the live capture.
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240129045207.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240129045207.png]]
 
 ## Common Session Variables (Auth Bypass)
 
@@ -375,11 +375,11 @@ See that the session variable username is set by forgot password flow and the au
 #### Exercise 
 
 Send a request with admin user in forgot password, remember the cookie
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240129055657.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240129055657.png]]
 
 the user is set to admin in this session cookie, so we only need to visit profile.php with this cookie without authentication.
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240129055741.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240129055741.png]]
 
 ## Premature Session Population (Auth Bypass)
 
@@ -409,8 +409,8 @@ if (isset($_GET['failed'])) {
 #### Exercise
 
 Change failed= 1 with success=1
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240130060742.png]]
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240130082705.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240130060742.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240130082705.png]]
 
 ## Common Session Variables (Account Takeover)
 
@@ -419,7 +419,7 @@ This session puzzling vulnerability is the result of the re-use of the same sess
 Exercise:
 primero ir a register colocar admin en register_1, luego ir a reset_1 colocar admin, seguir con register_2 y aceptar. Saltar a reset_3 y configurar la nueva password. Al ingresar piden MFA, por ello volveremos a register_1 para hacer register_1 y register_2, finalmente volveremos al MFA y entraremos a profile.php.
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211073537.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211073537.png]]
 
 # Prevention
 
@@ -494,32 +494,32 @@ if (isset($_GET['failed'])) {
 ## Easy
 
 Login with you normal creds
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211075912.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211075912.png]]
 
 You cant access admin area
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211075940.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211075940.png]]
 
 In order to populate the username variable we use reset password function
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211080024.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211080024.png]]
 After clic in submit the flag appears
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211080105.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211080105.png]]
 
 ## Hard
 
 After loggin with normal creds we see this message
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211080641.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211080641.png]]
 so we now have a clue where to poison the cache, we see the parameters sort_by and utm_source, sort_by is unkeyed, so we use this via parameter cloacking to poison the cache, also we verifiy where is injected our payload to make the correct one
 
 ```http
 /admin/users.html?sort_by=role&utm_source=users.html;sort_by=")</script><script>var+xhr+%3d+new+XMLHttpRequest()%3bxhr.open('GET',+'/admin/promote%3fuid%3d2',+true),xhr.send()%3b</script>
 ```
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211085553.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211085553.png]]
 
 Then for the other part, we need to exfiltrate the pin, we found the **Forwarded** Header is unkeyed and is reflected in response so we use this header to inject our interactsh.local url without the cache buster a=xd.and refresh=1
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211085835.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211085835.png]]
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211090344.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211090344.png]]
 
-![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211090326.png]]![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted Image 20240211090354.png]]
+![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211090326.png]]![[https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20Image%2020240211090354.png]]
