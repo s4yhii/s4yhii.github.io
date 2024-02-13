@@ -1,7 +1,6 @@
 ---
 title: AWS Certified Cloud Practicioner Notes
 date: 2022-01-16 12:00:00 -0400
-pin: true
 image: 
     path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/AWS-CCP%20Notes%205f15007385e34322932d54765668e379/banner.jfif
     height: 1100
