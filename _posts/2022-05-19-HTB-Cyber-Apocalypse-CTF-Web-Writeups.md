@@ -1,5 +1,5 @@
 ---
-title: HTB Cyber Apocalypse Web Writeup
+title: Cyber Apocalypse 2023 2x Web Challenges Writeup
 date: 2022-05-18 12:00:00 -0400
 image: 
  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/htb/ctf/ctf0.jpg
