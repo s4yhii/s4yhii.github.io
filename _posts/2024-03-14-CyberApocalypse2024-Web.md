@@ -11,8 +11,6 @@ tags: [Writeup, CTF, Web]
 
 I participated as a member of team **CibersecUNI**. In the web category we solved 6/9 challenges as a team. In this writeup I will go through the ones that I have solved:
 
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2024/Pasted%20image%2020240314080206.png)
-
 - [Testimonial](https://s4yhii.github.io/posts/CyberApocalypse2024_Web/#Testimonial)
 - [Labyrinth Linguist](https://s4yhii.github.io/posts/CyberApocalypse2024_Web/#Labyrinth-Linguist)
 - [TimeKORP](https://s4yhii.github.io/posts/CyberApocalypse2024_Web/#TimeKORP)
