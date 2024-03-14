@@ -1,6 +1,10 @@
 ---
-title: Web Cache Poisoning
+title: Web Cache Poisoning Techniques
 date: 2024-02-10 12:00:00 -0400
+image: 
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/webcache.png
+ height: 1600
+ width: 650
 categories: [Web Security, HTB]
 tags: [web security, labs, owasp]
 ---
@@ -268,7 +272,9 @@ The webapp uses the manipulated host header to construct the password reset link
 
 Sending http request with an override host header like X-Forwarded-Host pointing to our controlled server and the email of the victim (admin account)
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240121125017.png)
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240121125116.png)
+
 Use this url to change the admin password.
 
 ### Web cache poisoning
@@ -277,9 +283,10 @@ If you have web cache poison in a login.php endpoint, you can use override heade
 
 First we enter a cache buster to test this attack, to send to the admin we will erase this cache buster, and we add X-Host header to override the host header in the response, this can lead to posing the action form and send the creds with us
 
-**The admin accesses the URL http://admin.hostheaders.htb/login.php
+**The admin accesses the URL http://admin.hostheaders.htb/login.php**
 
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240121144553.png)
+
 Final POC Request to steal admin creds
 
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240121144812.png)
@@ -494,14 +501,19 @@ if (isset($_GET['failed'])) {
 ## Easy
 
 Login with you normal creds
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211075912.png)
 
 You cant access admin area
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211075940.png)
 
 In order to populate the username variable we use reset password function
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211080024.png)
+
 After clic in submit the flag appears
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211080105.png)
 
 ## Hard
@@ -522,4 +534,8 @@ Then for the other part, we need to exfiltrate the pin, we found the **Forwarded
 
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211090344.png)
 
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211090326.png)![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211090354.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211090326.png)
+
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/Pasted%20image%2020240211090354.png)
+
+Get the flag. 🎉 Thanks for read, Happy hacking and always try harder!
