@@ -23,7 +23,7 @@ timezone: America/Lima
 
 title: s4yhii's Blog                        # the main title
 
-tagline: Hi!, this is my blog where I will post all my notes about my everyday learning, thanks for being here.
+tagline: Appsec blog, CTF write-ups and more
 
 description: >-                        # used by seo meta and the atom feed
   Hi!, this is my blog where I will post all my notes about my everyday learning, thanks for being here.
@@ -49,7 +49,7 @@ social:
     - https://github.com/s4yhii       # change to your github homepage
     # Uncomment below to add more social links
     - https://www.linkedin.com/in/jesusluj4n
-    - https://app.hackthebox.eu/profile/274780
+    - https://app.hackthebox.com/profile/274780
 
 google_site_verification:               # fill in to your verification string
 
