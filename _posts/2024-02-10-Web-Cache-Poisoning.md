@@ -3,7 +3,7 @@ title: Web Cache Poisoning Techniques
 date: 2024-02-10 12:00:00 -0400
 image: 
  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/wcp/webcache.png
- height: 1600
+ height: 1500
  width: 650
 categories: [Web Security, HTB]
 tags: [web security, labs, owasp]
