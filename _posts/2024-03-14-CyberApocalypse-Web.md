@@ -1,6 +1,6 @@
 ---
 title: Cyber Apocalypse 2024 - 4x Web Challenges Writeup
-date: 2024-03-14 12:00:00 -0400
+date: 2024-03-14 08:00:00 -0500
 image: 
  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2024/htbimage.jpg
  height: 1500
