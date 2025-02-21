@@ -84,7 +84,7 @@ theme_mode:   # [light|dark]
 img_cdn: ''
 
 # the avatar on sidebar, support local or CORS resources
-avatar: 'https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/streams/pikachu.jpg'
+avatar: 'https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/streams/dance-pikachu.gif'
 
 # boolean type, the global switch for ToC in posts.
 toc: true
