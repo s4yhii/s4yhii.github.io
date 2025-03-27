@@ -8,7 +8,7 @@ image:
 categories: [HTB Writeups, Cyber Apocalypse CTF]
 tags: [Writeup, CTF, Web]
 ---
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-26.png)
+
 I participated as a member of team **CibersecUNI**. This time i managed to solve all 6/6 challenges in the web category.
 
 Web
@@ -90,15 +90,16 @@ The template is the following, so we should hit the endpoint /battle-report in o
 ![a](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-3.png)
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-11.png)
 
-After verifying that our string {{7*7}} is renderized as 49 in the response, we should inject our final payload to read the flag.
+After verifying that our string payload 7*7 is renderized as 49 in the response, we should inject our final payload to read the flag.
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-5.png)
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-12.png)
 
-
-```python
+{% raw %}
+```liquid
 warrior_name={{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('cat%20flag.txt').read()}}
 ```
+{% end raw %}
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-6.png)
 
