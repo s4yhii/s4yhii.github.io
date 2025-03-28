@@ -6,7 +6,7 @@ image:
  height: 1400
  width: 700
 categories: [HTB Writeups, Cyber Apocalypse CTF]
-tags: [Writeup, CTF, Web]
+tags: [HTB]
 ---
 
 I participated as a member of team **CibersecUNI**. In the web category we solved 6/9 challenges as a team. In this writeup I will go through the ones that I have solved:
