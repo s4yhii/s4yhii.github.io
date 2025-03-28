@@ -21,8 +21,6 @@ Web
 
 - 🐳 _Instancer_ 1 IP (web ui)
 
-![alt text](image.png)
-
 ovserving the functions, at the bottom it indicates use ; to `inject commands`.
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-1.png)
