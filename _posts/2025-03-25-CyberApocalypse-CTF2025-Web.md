@@ -11,11 +11,6 @@ tags: [Writeup, CTF, Web]
 
 I participated as a member of team **CibersecUNI**. This time i managed to solve all 6/6 challenges in the web category.
 
-Web
-- [Whispers of the Moonbeam](#Whispers-of-the-Moonbeam)
-- [Trial by Fire](#Trial-by-Fire)
-- [Cyber Attack](#Cyber-Attack)
-- [Eldoria Panel](#Eldoria-Panel)
 
 # Whispers of the Moonbeam
 
