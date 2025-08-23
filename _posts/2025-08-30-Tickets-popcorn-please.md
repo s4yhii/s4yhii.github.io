@@ -2,7 +2,7 @@
 title: Tickets and Popcorn please - The Day main(dot)js Became the Key Vault
 date: 2025-08-20 08:00:00 -0500
 image: 
- path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/masterhttps://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/cover.png
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/cover.png
  height: 1400
  width: 700
 categories: [Writeup, Bug Bounty]
@@ -25,33 +25,33 @@ That was the spark. What began as casual curiosity turned into a journey where I
 
 `“The checkout flow looked ordinary — until I noticed encInfo.”`
 
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/masterhttps://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/1.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/1.png)
 
 
 # Act II — The First Discovery: Ghost Receipts
 
 It all began while observing **network activity via Caido HTTP History** . A specific request caught my eye:
 
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/masterhttps://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/4.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/4.png)
 
 At first glance it felt too simple. My instinct was: surely the backend must cross-check this against a logged-in session or some signature. To confirm, I stripped the cookies and replayed the request. It still worked. That’s when I realized this endpoint was completely unauthenticated.
 
 Pro Tip: In Caido I like to replay with headers removed one by one (auth tokens, cookies, referers). This quickly reveals which ones actually matter. In this case, none did.
 
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/masterhttps://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/2.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/2.png)
 
 Next, I wondered how resilient it was against tampering. I changed the bookingId slightly, swapping the last character. Half-expecting a 403 or error, I instead got back a massive Base64 blob in the response.
 
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/masterhttps://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/3.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/3.png)
 
 A full movie ticket receipt for a user I had no relationship with that includes the following info: Full Name, Movie Title, Cine, Seat reserver, Date of visit, total price paid.
 
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/masterhttps://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/6.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/6.png)
 
 
 The invoice retrieval relied entirely on a `bookingId` string — a 7-character alphanumeric identifier starting with `W`. I tried to reverse engineer this string, but was not created in the front, instead in the back, so it was random. Through light fuzzing and guesswork, I retrieved several valid receipts. But I needed scale, with a few lines of Python, I wrote a brute-forcer — and within seconds, my terminal was spitting out dozens of receipts.
 
-![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/masterhttps://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/5.png)
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/5.png)
 
 Some of the booking IDs I brute-forced returned perfectly valid, usable tickets, while others came back as expired or invalid. If the showtime was scheduled for the same day, the receipt was essentially “live” and could be used to claim entry. Anything older would still return a receipt, but one that no longer held any real-world value.
 
