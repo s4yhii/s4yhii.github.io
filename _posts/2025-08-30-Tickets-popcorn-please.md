@@ -1,8 +1,8 @@
 ---
 title: Tickets and Popcorn please - The Day main(dot)js Became the Key Vault
-date: 2025-08-21 08:00:00 -0500
+date: 2025-08-30 08:00:00 -0500
 image: 
- path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/ciname/cover.png
+ path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/cover.png
  height: 1400
  width: 700
 categories: [Writeup, Bug Bounty]
