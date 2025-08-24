@@ -1,10 +1,10 @@
 ---
-title: Tickets and Popcorn please - The Day main(dot)js Became the Key Vault
+title: Tickets and Popcorn please!, The Day main.js Became the Key Vault
 date: 2025-08-20 08:00:00 -0500
 image: 
  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/cover.png
- height: 1000
- width: 700
+ height: 850
+ width: 600
 categories: [Writeup, Bug Bounty]
 tags: [Writeup, Bug Bounty]
 ---
@@ -14,6 +14,8 @@ This blog post is shared for educational and academic purposes only. All issues 
 The intention of this write-up is to raise awareness, improve security practices, and share lessons learned with the community.
 
 # Act I — The Setup
+
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/four.gif)
 
 It all started on a lazy evening in April. I wasn’t trying to hack anything major, just poking around a movie ticketing site with DevTools open. As I added a ticket to my cart, something odd caught my eye: a POST request carrying a mysterious parameter named encInfo.
 
@@ -27,7 +29,7 @@ req.method.cont:"POST" and not req.host.cont:"analytics"
 
 That was the spark. What began as casual curiosity turned into a journey where I ended up pulling strangers’ receipts and breaking AES encryption in the browser.
 
-`“The checkout flow looked ordinary — until I noticed encInfo.”`
+`“The checkout flow looked ordinary, until I noticed encInfo.”`
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/1.png)
 
@@ -93,7 +95,7 @@ No obfuscation. No key rotation. Just the crypto equivalent of leaving your hous
 
 Lesson: **Never trust the client to encrypt or validate anything important.**
 
-At this point, the puzzle pieces clicked together. If I had the key and the IV, then that big scary encInfo blob wasn’t scary at all — it was just encrypted JSON waiting to be freed.
+At this point, the puzzle pieces clicked together. If I had the key and the IV, then that big scary encInfo blob wasn’t scary at all, it was just encrypted JSON waiting to be freed.
 
 So I copied one out of a real request, fired up a quick Python script with PyCryptodome, and hit run:
 
@@ -136,11 +138,13 @@ With the key and IV in hand, encinfo was just AES‑CBC–encrypted JSON. I grab
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/9.png)
 
 
-I then re‑encrypted the edited JSON with the same key/IV, dropped it back into the request, and replayed it. The backend didn’t blink: no integrity check and no server‑side validation.
+I then re‑encrypted the edited JSON with the same key/IV, dropped it back into the request, and replayed it.
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/10.png)
 
 The backend didn’t blink. No error, no integrity check, no “are you kidding me?” 
+
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/three.gif)
 
 This means an attacker could (not tested):
 
@@ -166,7 +170,7 @@ Together, these issues could leak personal information, enumerate active tickets
 
 - **Use integrity checks.** Encrypted blobs must be signed (e.g., HMAC, AEAD) to prevent tampering.
 
-- **Protect sensitive APIs with authentication and authorization.** A booking receipt is personal data — it should never be accessible unauthenticated.
+- **Protect sensitive APIs with authentication and authorization.** A booking receipt is personal data, it should never be accessible unauthenticated.
 
 - **Avoid predictable identifiers.** Short, sequential booking codes make brute-forcing feasible; use long, random identifiers.
 
