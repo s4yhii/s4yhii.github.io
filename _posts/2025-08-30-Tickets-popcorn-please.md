@@ -3,11 +3,15 @@ title: Tickets and Popcorn please - The Day main(dot)js Became the Key Vault
 date: 2025-08-20 08:00:00 -0500
 image: 
  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/cover.png
- height: 1400
+ height: 1000
  width: 700
 categories: [Writeup, Bug Bounty]
 tags: [Writeup, Bug Bounty]
 ---
+
+## Disclaimer
+This blog post is shared for educational and academic purposes only. All issues described here were responsibly reported to the affected company and have since been fixed and verified. Permission to publish was granted by the company.
+The intention of this write-up is to raise awareness, improve security practices, and share lessons learned with the community.
 
 # Act I — The Setup
 
@@ -173,7 +177,7 @@ Together, these issues could leak personal information, enumerate active tickets
 |Date|Action|
 |---|---|
 |April, 30, 2025| Initial report sent to the company|
-|May, 07, 2025|Initial response sent to the company|w
+|May, 07, 2025|Initial response sent to the company|
 |June, 30, 2025|Vulnerability fixed, unable to reproduce|
 |August 21, 2025|Company give the rights to publish|
 |August 30, 2025|Blog post released|
@@ -181,9 +185,11 @@ Together, these issues could leak personal information, enumerate active tickets
 ## Thanks
 
 I hope this write‑up is useful. Thanks for reading and sharing.
-Special thanks to:
 
+We’ll be back soon.
+Special thanks for their help reviewing this post to:
 
-for their help reviewing this post.
+Here’s to late-night packet captures, over-caffeinated hunches, and the thrill of chasing down bugs that shouldn’t have been there in the first place.
 
+Until the next one, stay curious, stay ethical.
 
