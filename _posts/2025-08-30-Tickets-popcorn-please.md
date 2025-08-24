@@ -30,7 +30,9 @@ That was the spark. What began as casual curiosity turned into a journey where I
 
 # Act II — The First Discovery: Ghost Receipts
 
-It all began while observing **network activity via Caido HTTP History** . A specific request caught my eye:
+That weekend, I had planned to go to the movies with my girlfriend. She sent me a screenshot of her reservation: it showed the bookingId and the QR code of the ticket, but not the seat numbers. Curious, I wondered if it was possible to retrieve the full ticket details including seats using only the order number.
+
+With that in mind, I opened the developer tools and as I downloaded one of my own tickets, I began watching the network traffic, and that’s when I noticed a request that looked especially interesting.
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/4.png)
 
@@ -45,6 +47,8 @@ Next, I wondered how resilient it was against tampering. I changed the bookingId
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/3.png)
 
 A full movie ticket receipt for a user I had no relationship with that includes the following info: Full Name, Movie Title, Cine, Seat reserver, Date of visit, total price paid.
+
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/one.gif)
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/6.png)
 
@@ -65,6 +69,8 @@ Even after pulling receipts, something still bugged me. Every sensitive request 
 
 At first, I tried poking at it. Change a byte, send it back, watch what happens. Every time I did, the server threw me either a 400 Bad Request or a 500 Internal Server Error. That told me one thing: this blob wasn’t just noise. The backend really cared about it.
 
+![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/two.gif)
+
 So I switched gears. If the backend cared so much, maybe the frontend could tell me why. I opened Chrome DevTools, jumped into Sources, and started scrolling through the minified spaghetti that was main.js.
 
 When hunting for crypto in JS, I’ve learned a trick: search for obvious strings like "AES" or "encrypt", or just regex for anything that looks like a key. Thirty-two characters, all numbers? Suspicious. Sixteen characters of lowercase letters? Even more suspicious.
@@ -73,11 +79,11 @@ And there it was. Jackpot. Right in the middle of the bundle:
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/7.png)
 
+After scrolling through the minified main.js, I finally spotted the smoking gun: both the encryption key and the initialization vector (IV) were hard-coded directly into the bundle. That meant every encinfo request from the frontend was being encrypted with the exact same values, fully exposed to anyone inspecting the source. Right next to them, I also found the function call responsible for wrapping the sensitive JSON data before sending it to the backend:
 
 ```javascript
 AES.encrypt(pad(JSON.stringify(data), 16), KEY, { iv: IV });
 ```
-
 
 No obfuscation. No key rotation. Just the crypto equivalent of leaving your house key under the doormat.
 
@@ -114,10 +120,8 @@ And out came a neat little JSON:
   "FirstRequest": false
 }
 ```
+With the key and IV in hand, encinfo was just AES‑CBC–encrypted JSON. I grabbed one of my own requests, wrote a short Python script (PyCryptodome), and decrypted it. Out came plain business data: session IDs, items, prices, flags. For example, my popcorn order showed 6300 cents.
 
-Suddenly, the “mysterious blob” was just plain business logic. Prices. Sessions. Flags for returns and refunds. All editable.
-
-I couldn’t resist testing it. I decrypted one of my own ticket purchase payloads, scrolled down to the Concessions section, and spotted my popcorn order sitting there at 6300 cents.
 
 ```json
 "Concessions": [
@@ -128,13 +132,13 @@ I couldn’t resist testing it. I decrypted one of my own ticket purchase payloa
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/9.png)
 
 
-Re-encrypted the blob with the same key and IV, dropped it back into the request, and hit Replay.
+I then re‑encrypted the edited JSON with the same key/IV, dropped it back into the request, and replayed it. The backend didn’t blink: no integrity check and no server‑side validation.
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/10.png)
 
 The backend didn’t blink. No error, no integrity check, no “are you kidding me?” 
 
-This means an attacker could:
+This means an attacker could (not tested):
 
 - Forge tickets and concession orders.   
 - Abuse the order flow (`ReturnOrder`, `ProcessOrderValue`).
@@ -144,25 +148,25 @@ That’s when it hit me: the browser wasn’t just handling presentation; it was
 
 ## Summary
 
-The ticketing platform exposed two critical flaws in its web application:
+The platform exposed two critical flaws:
 
-An unauthenticated invoice API that returned Base64-encoded PDF receipts when given only a bookingId and email, allowing enumeration of customers’ tickets.
+1. **Unauthenticated invoice API.** Given only a bookingId, it returned Base64‑encoded PDF receipts, enabling enumeration and ticket misuse.
 
-A frontend that implemented AES-CBC encryption with hardcoded key and IV in main.js, enabling attackers to decrypt, modify, and re-encrypt sensitive request payloads like session IDs, ticket orders, and refunds.
+2. **Client‑side AES with hard‑coded secrets.** The frontend used AES‑CBC with a static key and IV in main.js, allowing decryption, modification, and re‑encryption of sensitive request payloads (sessions, tickets, concessions, refunds) with no integrity protection.
 
-Together, these issues could have allowed attackers to exfiltrate customer PII, enumerate active tickets, and manipulate order flows. Once I confirmed the vulnerability, I stopped testing and reported the issues responsibly.
+Together, these issues could leak personal information, enumerate active tickets, forge or alter orders, and abuse refund flows. Once I confirmed the impact, I stopped testing and reported it responsibly
 
-## Lessons Leardned
+## Lessons Learned
 
-- Never trust the client for security. Cryptographic operations and secrets should live on the server, not in JavaScript.
+- **Never trust the client for security.** Cryptographic operations and secrets should live on the server, not in JavaScript.
 
-- Use integrity checks. Encrypted blobs must be signed (e.g., HMAC, AEAD) to prevent tampering.
+- **Use integrity checks.** Encrypted blobs must be signed (e.g., HMAC, AEAD) to prevent tampering.
 
-- Protect sensitive APIs with authentication and authorization. A booking receipt is personal data — it should never be accessible unauthenticated.
+- **Protect sensitive APIs with authentication and authorization.** A booking receipt is personal data — it should never be accessible unauthenticated.
 
-- Avoid predictable identifiers. Short, sequential booking codes make brute-forcing feasible; use long, random identifiers.
+- **Avoid predictable identifiers.** Short, sequential booking codes make brute-forcing feasible; use long, random identifiers.
 
-- Validate and rate-limit aggressively. Even “read-only” endpoints can leak massive amounts of data without proper controls.
+- **Avoid security through obscurity**
 
 ## Timeline
 
@@ -176,12 +180,10 @@ Together, these issues could have allowed attackers to exfiltrate customer PII, 
 
 ## Thanks
 
-I hope this writeup are useful and help you make money. Thanks for reading, sharing and everything that I don't know. Huge thanks to the following people for helping write and review this post:
+I hope this write‑up is useful. Thanks for reading and sharing.
+Special thanks to:
 
-- Carlos Aguilar
-- Cesar Neira
-- Jonathan Huallanca
-- Jose Londres
-- Eduardo Sarria
+
+for their help reviewing this post.
 
 
