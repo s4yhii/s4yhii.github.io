@@ -193,10 +193,10 @@ I hope this write‑up is useful. Thanks for reading and sharing.
 We’ll be back soon.
 Special thanks for their help reviewing this post to:
 
+- PuneyK
 - Alguien
 - xpnt
 - MrDesdes
-- puneyk
 
 Until the next one, stay curious, stay ethical.
 
