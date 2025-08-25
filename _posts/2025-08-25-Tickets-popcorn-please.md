@@ -1,6 +1,6 @@
 ---
 title: Tickets and Popcorn please!, The Day main.js Became the Key Vault
-date: 2025-08-20 08:00:00 -0500
+date: 2025-08-25 08:00:00 -0500
 image: 
  path: https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/cover.png
  height: 850
@@ -17,7 +17,7 @@ The intention of this write-up is to raise awareness, improve security practices
 
 ![alt text](https://raw.githubusercontent.com/s4yhii/s4yhii.github.io/master/assets/images/Writeup/cinema/four.gif)
 
-It all started on a lazy evening in April. I wasn’t trying to hack anything major, just poking around a movie ticketing site with DevTools open. As I added a ticket to my cart, something odd caught my eye: a POST request carrying a mysterious parameter named encInfo.
+It all started on a lazy evening in April. I wasn’t trying to hack anything major, just poking around a movie ticketing site which I'm client of with DevTools open. As I added a ticket to my cart, something odd caught my eye: a POST request carrying a mysterious parameter named encInfo.
 
 `“Why would a frontend encrypt its own traffic before sending it to its backend?”`
 
@@ -65,7 +65,7 @@ The invoice retrieval relied entirely on a `bookingId` string — a 7-characte
 
 Some of the booking IDs I brute-forced returned perfectly valid, usable tickets, while others came back as expired or invalid. If the showtime was scheduled for the same day, the receipt was essentially “live” and could be used to claim entry. Anything older would still return a receipt, but one that no longer held any real-world value.
 
-This meant that, in practice, an attacker could target today’s active IDs and potentially walk into a cinema with someone else’s booking. The combination of weak identifiers, no authentication, and the time-sensitive nature of these receipts turned what looked like “just a privacy leak” into a real access control issue with direct financial and reputational impact.
+This meant an attacker could take a valid booking ID, use it against the system, and walk into the cinema using someone else’s ticket. Because the IDs were weak and there was no authentication, what first looked like a small privacy issue quickly became a serious access control flaw, with real financial and reputational impact.
 
 # Act III — The Cipher in the Browser
 
@@ -126,7 +126,7 @@ And out came a neat little JSON:
   "FirstRequest": false
 }
 ```
-With the key and IV in hand, encinfo was just AES‑CBC–encrypted JSON. I grabbed one of my own requests, wrote a short Python script (PyCryptodome), and decrypted it. Out came plain business data: session IDs, items, prices, flags. For example, my popcorn order showed 6300 cents.
+With the key and IV in hand, encinfo was just AES‑CBC encrypted JSON. I grabbed one of my own requests, wrote a short Python script (PyCryptodome), and decrypted it. Out came plain business data: session IDs, items, prices, flags. For example, my popcorn order showed 6300 cents.
 
 
 ```json
@@ -193,7 +193,9 @@ I hope this write‑up is useful. Thanks for reading and sharing.
 We’ll be back soon.
 Special thanks for their help reviewing this post to:
 
-Here’s to late-night packet captures, over-caffeinated hunches, and the thrill of chasing down bugs that shouldn’t have been there in the first place.
+- Alguien
+- xpnt
+- MrDesdes
 
 Until the next one, stay curious, stay ethical.
 
