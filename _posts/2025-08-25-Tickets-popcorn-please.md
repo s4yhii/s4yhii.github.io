@@ -154,7 +154,7 @@ This means an attacker could (not tested):
 
 That’s when it hit me: the browser wasn’t just handling presentation; it was acting like the bank vault for the entire ordering process. And with the AES key and IV lying around in main.js, I hadn’t broken in — they’d handed me the vault combination.
 
-## Summary
+# Summary
 
 The platform exposed two critical flaws:
 
