@@ -184,7 +184,7 @@ Together, these issues could leak personal information, enumerate active tickets
 |May, 07, 2025|Initial response from the company|
 |June, 30, 2025|Vulnerability fixed, unable to reproduce|
 |August 21, 2025|Company give the rights to publish|
-|August 30, 2025|Blog post released|
+|August 25, 2025|Blog post released|
 
 ## Thanks
 
